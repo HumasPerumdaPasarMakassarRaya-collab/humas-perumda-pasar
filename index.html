@@ -8,7 +8,28 @@
 <body>
 
   <h1>Humas Perumda Pasar Makassar Raya</h1>
-  <p>Website ini sedang dalam tahap pengembangan.</p>
+  <p>Status Firebase:</p>
+
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+    const firebaseConfig = {
+    apiKey: "AIzaSyDB2VM_2VbesCkNs9og0saP7lRum93TqCI",
+    authDomain: "humas-perumda-pasar-maka-9d4d0.firebaseapp.com",
+    projectId: "humas-perumda-pasar-maka-9d4d0",
+    storageBucket: "humas-perumda-pasar-maka-9d4d0.firebasestorage.app",
+    messagingSenderId: "1064569749212",
+    appId: "1:1064569749212:web:5acc95cd27795796da7e19"
+  };
+
+    const app = initializeApp(firebaseConfig);
+
+    document.body.insertAdjacentHTML(
+      "beforeend",
+      "<p><strong>Firebase berhasil terhubung ✅</strong></p>"
+    );
+  </script>
 
 </body>
 </html>
