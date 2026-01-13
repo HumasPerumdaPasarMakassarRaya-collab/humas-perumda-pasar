@@ -8,15 +8,16 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #fff3c4;
-      padding: 40px;
+      background: #f5f5f5;
+      padding: 30px;
     }
     .login-box {
-      max-width: 400px;
+      max-width: 360px;
       margin: auto;
-      background: #ffffff;
+      background: white;
       padding: 20px;
       border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     input, button {
       width: 100%;
@@ -24,32 +25,37 @@
       margin-top: 10px;
     }
     button {
-      background: #f1b400;
+      background: #f2c200;
       border: none;
+      font-weight: bold;
+    }
+    #status {
+      margin-top: 15px;
       font-weight: bold;
     }
   </style>
 </head>
-<body>
-  <div id="loginBox">
-  <h3>Login</h3>
-  <input type="email" id="email" placeholder="Email"><br><br>
-  <input type="password" id="password" placeholder="Password"><br><br>
-  <button id="loginBtn">Login</button>
-</div>
 
-<div id="status"></div>
+<body>
+
+  <div class="login-box">
+    <h2>Login</h2>
+
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button id="loginBtn">Login</button>
+
+    <div id="status"></div>
   </div>
 
-    <!-- Firebase -->
+  <!-- FIREBASE SCRIPT -->
   <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } 
-    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-  import { getFirestore, doc, getDoc } 
-    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged }
+      from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc }
+      from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  const firebaseConfig = {
     const firebaseConfig = {
     apiKey: "AIzaSyDB2VM_2VbesCkNs9og0saP7lRum93TqCI",
     authDomain: "humas-perumda-pasar-maka-9d4d0.firebaseapp.com",
@@ -57,41 +63,49 @@
     storageBucket: "humas-perumda-pasar-maka-9d4d0.firebasestorage.app",
     messagingSenderId: "1064569749212",
     appId: "1:1064569749212:web:5acc95cd27795796da7e19"
-  };
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-  const loginBtn = document.getElementById("loginBtn");
+    document.addEventListener("DOMContentLoaded", () => {
+      const loginBtn = document.getElementById("loginBtn");
 
-  loginBtn.addEventListener("click", async () => {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+      loginBtn.addEventListener("click", async () => {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
 
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      document.getElementById("status").innerText = "Login berhasil";
-    } catch (err) {
-      alert("Login gagal: " + err.message);
-    }
-  });
+        if (!email || !password) {
+          alert("Email dan password wajib diisi");
+          return;
+        }
 
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      const ref = doc(db, "users", user.uid);
-      const snap = await getDoc(ref);
+        try {
+          await signInWithEmailAndPassword(auth, email, password);
+          document.getElementById("status").innerText = "Login berhasil...";
+        } catch (err) {
+          alert("Login gagal: " + err.message);
+        }
+      });
+    });
 
-      if (snap.exists()) {
-        document.getElementById("status").innerText =
-          "Masuk sebagai " + snap.data().role.toUpperCase();
-      } else {
-        alert("Data user tidak ditemukan di Firestore");
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const ref = doc(db, "users", user.uid);
+        const snap = await getDoc(ref);
+
+        if (snap.exists()) {
+          const role = snap.data().role;
+          document.getElementById("status").innerText =
+            "Masuk sebagai " + role.toUpperCase();
+        } else {
+          document.getElementById("status").innerText =
+            "User tidak terdaftar di Firestore";
+        }
       }
-    }
-  });
+    });
   </script>
 
-  
 </body>
 </html>
