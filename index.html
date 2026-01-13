@@ -31,7 +31,6 @@
   </style>
 </head>
 <body>
-
   <div class="login-box">
     <h2>Login Aplikasi Humas</h2>
 
@@ -43,11 +42,12 @@
     <p id="status"></p>
   </div>
 
-  <!-- Firebase -->
+    <!-- Firebase -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
+    import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    
     const firebaseConfig = {
     apiKey: "AIzaSyDB2VM_2VbesCkNs9og0saP7lRum93TqCI",
     authDomain: "humas-perumda-pasar-maka-9d4d0.firebaseapp.com",
@@ -58,7 +58,8 @@
   };
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-
+    const db = getFirestore(app);
+    
     window.login = function () {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
