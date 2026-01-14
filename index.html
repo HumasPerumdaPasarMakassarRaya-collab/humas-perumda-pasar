@@ -6,13 +6,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* ===== RESET ===== */
 *{
   box-sizing:border-box;
   font-family: Arial, sans-serif;
 }
 
-/* ===== BACKGROUND ===== */
 body{
   margin:0;
   height:100vh;
@@ -24,7 +22,6 @@ body{
   align-items:center;
 }
 
-/* ===== LOGIN BOX ===== */
 .login-box{
   background:rgba(255,255,255,0.95);
   width:90%;
@@ -34,7 +31,6 @@ body{
   box-shadow:0 10px 25px rgba(0,0,0,0.3);
 }
 
-/* ===== LOGO ===== */
 .logo{
   text-align:center;
   margin-bottom:15px;
@@ -44,14 +40,12 @@ body{
   width:90px;
 }
 
-/* ===== TITLE ===== */
 h2{
   text-align:center;
   margin-bottom:20px;
   color:#222;
 }
 
-/* ===== INPUT ===== */
 input{
   width:100%;
   padding:12px;
@@ -61,7 +55,6 @@ input{
   font-size:14px;
 }
 
-/* ===== BUTTON ===== */
 button{
   width:100%;
   padding:12px;
@@ -77,7 +70,6 @@ button:hover{
   background:#0b5ed7;
 }
 
-/* ===== ERROR ===== */
 #error{
   color:red;
   text-align:center;
@@ -90,9 +82,7 @@ button:hover{
 <body>
 
 <div class="login-box">
-
   <div class="logo">
-    <!-- Optional logo -->
     <!-- <img src="assets/images/logo.png"> -->
   </div>
 
@@ -102,17 +92,14 @@ button:hover{
   <input type="password" id="password" placeholder="Password" required>
 
   <button id="loginBtn">Login</button>
-
   <div id="error"></div>
 </div>
 
-<!-- ===== FIREBASE ===== -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-/* 🔥 CONFIG ANDA */
 const firebaseConfig = {
   apiKey: "AIzaSyDB2VM_2VbesCkNs9og0saP7lRum93TqCI",
   authDomain: "humas-perumda-pasar-maka-9d4d0.firebaseapp.com",
@@ -126,10 +113,9 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-/* ===== LOGIN PROCESS ===== */
 document.getElementById("loginBtn").onclick = async () => {
-  const email = email.value;
-  const password = password.value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
   const error = document.getElementById("error");
   error.innerText = "";
 
@@ -137,7 +123,6 @@ document.getElementById("loginBtn").onclick = async () => {
     const userCred = await signInWithEmailAndPassword(auth, email, password);
     const uid = userCred.user.uid;
 
-    /* Ambil ROLE dari Firestore */
     const userSnap = await getDoc(doc(db, "users", uid));
 
     if(!userSnap.exists()){
@@ -147,7 +132,6 @@ document.getElementById("loginBtn").onclick = async () => {
 
     const role = userSnap.data().role;
 
-    /* Redirect sesuai role */
     if(role === "admin"){
       location.href = "admin.html";
     }
