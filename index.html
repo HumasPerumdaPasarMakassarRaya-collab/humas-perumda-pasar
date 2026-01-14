@@ -1,77 +1,85 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <title>Login Sistem Agenda</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Humas</title>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .login-box {
-      background: white;
-      padding: 25px;
-      border-radius: 8px;
-      width: 100%;
-      max-width: 350px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 12px;
-    }
-    button {
-      width: 100%;
-      padding: 10px;
-      background: #0d6efd;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #0b5ed7;
-    }
-    .error {
-      color: red;
-      font-size: 14px;
-      margin-top: 10px;
-      text-align: center;
-    }
-  </style>
+<style>
+*{box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+body{
+  margin:0;
+  background:radial-gradient(circle at top,#ffd54f,#f9a825);
+}
+.app{
+  max-width:420px;
+  margin:auto;
+  background:#fff;
+  min-height:100vh;
+}
+.header{
+  background:#000;
+  color:#00e5ff;
+  padding:20px;
+  text-align:center;
+}
+.content{padding:25px}
+.card{
+  background:#fff;
+  padding:20px;
+  border-radius:18px;
+  box-shadow:0 6px 16px rgba(0,0,0,.2);
+}
+input{
+  width:100%;
+  padding:14px;
+  margin-top:12px;
+  border-radius:12px;
+  border:1px solid #ccc;
+}
+button{
+  width:100%;
+  margin-top:20px;
+  padding:15px;
+  border:none;
+  border-radius:30px;
+  background:linear-gradient(135deg,#00bcd4,#0288d1);
+  color:#fff;
+  font-size:16px;
+}
+.footer{
+  text-align:center;
+  font-size:12px;
+  padding:10px;
+}
+</style>
 </head>
+
 <body>
-
-  <div class="login-box">
-    <h2>Login Sistem</h2>
-
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Password" />
-
-    <button id="loginBtn">Login</button>
-
-    <div class="error" id="errorMsg"></div>
+<div class="app">
+  <div class="header">
+    <h2>PERUMDA PASAR KARYA</h2>
+    <p>Dokumentasi & Agenda</p>
   </div>
 
-  <!-- FIREBASE -->
-  <script type="module">
-    // 1️⃣ IMPORT FIREBASE
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  <div class="content">
+    <div class="card">
+      <input id="email" type="email" placeholder="Email">
+      <input id="password" type="password" placeholder="Password">
+      <button onclick="login()">LOGIN</button>
+      <p id="error" style="color:red;text-align:center"></p>
+    </div>
+  </div>
 
-    // 2️⃣ CONFIG FIREBASE (PASTE MILIK ANDA)
-    const firebaseConfig = {
+  <div class="footer">© 2026 Humas Perumda Pasar</div>
+</div>
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+<script>
+const firebaseConfig = {
   apiKey: "AIzaSyDB2VM_2VbesCkNs9og0saP7lRum93TqCI",
   authDomain: "humas-perumda-pasar-maka-9d4d0.firebaseapp.com",
   projectId: "humas-perumda-pasar-maka-9d4d0",
@@ -79,57 +87,17 @@
   messagingSenderId: "1064569749212",
   appId: "1:1064569749212:web:5acc95cd27795796da7e19"
 };
+firebase.initializeApp(firebaseConfig);
 
-    // 3️⃣ INIT
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    // 4️⃣ LOGIN
-    document.getElementById("loginBtn").addEventListener("click", async () => {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      const errorMsg = document.getElementById("errorMsg");
-
-      errorMsg.textContent = "";
-
-      try {
-        // AUTH LOGIN
-        await signInWithEmailAndPassword(auth, email, password);
-
-        // CEK ROLE DI FIRESTORE
-        const q = query(
-          collection(db, "users"),
-          where("email", "==", email),
-          where("aktif", "==", true)
-        );
-
-        const querySnapshot = await getDocs(q);
-
-        if (querySnapshot.empty) {
-          errorMsg.textContent = "Akun tidak terdaftar atau tidak aktif";
-          return;
-        }
-
-        const userData = querySnapshot.docs[0].data();
-        const role = userData.role;
-
-        // REDIRECT BERDASARKAN ROLE
-        if (role === "admin") {
-          window.location.href = "admin.html";
-        } else if (role === "protokoler") {
-          window.location.href = "protokoler.html";
-        } else if (role === "dokumentasi") {
-          window.location.href = "dokumentasi.html";
-        } else {
-          errorMsg.textContent = "Role tidak dikenali";
-        }
-
-      } catch (error) {
-        errorMsg.textContent = error.message;
-      }
-    });
-  </script>
-
+function login(){
+  firebase.auth().signInWithEmailAndPassword(
+    email.value,password.value
+  ).then(()=>{
+    window.location="admin.html";
+  }).catch(e=>{
+    error.innerText=e.message;
+  })
+}
+</script>
 </body>
 </html>
