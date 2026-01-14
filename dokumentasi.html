@@ -1,44 +1,50 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Dashboard Dokumentasi</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dokumentasi</title>
+
+<style>
+body{margin:0;background:#f9a825;font-family:Segoe UI}
+.app{max-width:420px;margin:auto;background:#fff;min-height:100vh}
+.header{background:#000;color:#00e5ff;padding:15px;text-align:center}
+.card{
+  margin:20px;
+  padding:20px;
+  border-radius:16px;
+  box-shadow:0 4px 12px rgba(0,0,0,.2)
+}
+input,textarea{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border-radius:10px;
+  border:1px solid #ccc
+}
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:30px;
+  background:#0288d1;
+  color:#fff;
+  margin-top:15px
+}
+</style>
 </head>
+
 <body>
+<div class="app">
+  <div class="header"><h2>DOKUMENTASI</h2></div>
 
-<h2>Dashboard Dokumentasi</h2>
-<p>Selamat datang, <b>Dokumentasi</b></p>
-
-<button onclick="logout()">Logout</button>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-  const firebaseConfig = {
-  apiKey: "AIzaSyDB2VM_2VbesCkNs9og0saP7lRum93TqCI",
-  authDomain: "humas-perumda-pasar-maka-9d4d0.firebaseapp.com",
-  projectId: "humas-perumda-pasar-maka-9d4d0",
-  storageBucket: "humas-perumda-pasar-maka-9d4d0.firebasestorage.app",
-  messagingSenderId: "1064569749212",
-  appId: "1:1064569749212:web:5acc95cd27795796da7e19"
-};
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-
-  onAuthStateChanged(auth, (user) => {
-    if (!user) {
-      window.location.href = "index.html";
-    }
-  });
-
-  window.logout = async () => {
-    await signOut(auth);
-    window.location.href = "index.html";
-  };
-</script>
-
+  <div class="card">
+    <input placeholder="Nama Kegiatan">
+    <input placeholder="Lokasi">
+    <input placeholder="Tanggal">
+    <textarea placeholder="Keterangan"></textarea>
+    <button>Simpan Dokumentasi</button>
+  </div>
+</div>
 </body>
 </html>
