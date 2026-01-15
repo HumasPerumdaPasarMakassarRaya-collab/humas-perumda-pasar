@@ -27,8 +27,19 @@ body{
 }
 
 .login-box{
-  background:#fff;
+  width:90%;
+  max-width:360px;
+  padding:16px;
+  background: transparent;
+  box-shadow:none;
 }
+
+  .form-panel{
+  background:#ffffff;
+  border-radius:14px;
+  padding:18px;
+  box-shadow:0 12px 30px rgba(0,0,0,0.25);
+  }
 
 .logo{
   text-align:center;
@@ -81,17 +92,16 @@ button:hover{
 <body>
 
 <div class="login-box">
-  <div class="logo">
-    <!-- <img src="assets/images/logo.png"> -->
-  </div>
 
   <h2>Login Sistem Humas</h2>
 
-  <input type="email" id="email" placeholder="Email" required>
-  <input type="password" id="password" placeholder="Password" required>
+  <div class="form-panel">
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button id="loginBtn">Login</button>
+    <div id="error"></div>
+  </div>
 
-  <button id="loginBtn">Login</button>
-  <div id="error"></div>
 </div>
 
 <script type="module">
