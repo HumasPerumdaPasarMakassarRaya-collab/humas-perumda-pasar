@@ -8,89 +8,104 @@
 <style>
 *{
   box-sizing:border-box;
-  font-family: Arial, sans-serif;
+  font-family:"Segoe UI",Arial,sans-serif;
 }
 
 body{
   margin:0;
   height:100vh;
-
-  background-image:url("./assets/images/bg-index.jpg");
-  background-size:cover;
-  background-position:top center;
-  background-repeat:no-repeat;
-
-  position:relative;
-}
-
-.login-wrapper{
-  position:absolute;
-  top:40%;
-  left:50%;
-  transform:translateX(-50%);
-  width:100%;
+  background:url("./assets/images/bg-index.jpg") center/cover no-repeat;
   display:flex;
   justify-content:center;
+  align-items:center;
 }
-  
+
+/* GLASS BOX */
 .login-box{
   width:90%;
   max-width:360px;
-  padding:16px;
-  background: transparent;
-  box-shadow:none;
+  padding:26px 22px;
+  border-radius:22px;
+  backdrop-filter: blur(14px);
+  background: rgba(255,255,255,.18);
+  box-shadow:0 20px 40px rgba(0,0,0,.35);
 }
 
-  .form-panel{
-  background:#ffffff;
-  border-radius:14px;
-  padding:18px;
-  box-shadow:0 12px 30px rgba(0,0,0,0.25);
-  }
-
-.logo{
+.login-box h2{
   text-align:center;
-  margin-bottom:15px;
-}
-
-.logo img{
-  width:90px;
-}
-
-h2{
-  text-align:center;
-  margin-bottom:20px;
   color:white;
+  margin-bottom:22px;
 }
 
+/* INPUT */
 input{
   width:100%;
-  padding:14px;
+  padding:14px 16px;
   margin-bottom:14px;
-  border-radius:10px;
-  border:1px solid #ddd;
+  border:none;
+  border-radius:14px;
   font-size:15px;
+  outline:none;
+  background:rgba(255,255,255,.95);
 }
 
+/* PASSWORD */
+.password-wrapper{
+  position:relative;
+}
+
+.eye-btn{
+  position:absolute;
+  top:50%;
+  right:14px;
+  transform:translateY(-50%);
+  width:22px;
+  height:22px;
+  cursor:pointer;
+  opacity:.7;
+}
+.eye-btn:hover{opacity:1;}
+
+/* STRENGTH */
+.strength{
+  height:6px;
+  background:#ddd;
+  border-radius:6px;
+  overflow:hidden;
+  margin-bottom:18px;
+}
+.strength-bar{
+  height:100%;
+  width:0;
+  transition:.3s;
+}
+.weak{background:#ff4d4d;}
+.medium{background:#ffc107;}
+.strong{background:#4caf50;}
+
+/* BUTTON */
 button{
   width:100%;
   padding:14px;
-  background:#0d6efd;
   border:none;
-  color:#fff;
+  border-radius:16px;
+  background:linear-gradient(135deg,#0d6efd,#00c6ff);
+  color:white;
   font-size:16px;
-  border-radius:10px;
   font-weight:bold;
+  cursor:pointer;
+  transition:.3s;
 }
-
 button:hover{
-  background:#0b5ed7;
+  transform:translateY(-2px) scale(1.02);
+  box-shadow:0 12px 25px rgba(0,123,255,.5);
 }
 
+/* ERROR */
 #error{
-  color:red;
+  color:#ffdddd;
   text-align:center;
-  margin-top:10px;
+  margin-top:12px;
   font-size:14px;
 }
 </style>
@@ -98,27 +113,45 @@ button:hover{
 
 <body>
 
-  <div class="login-wrapper">
-    <div class="login-box">
+<div class="login-box">
+  <h2>Login</h2>
 
-      <!-- HEADER -->
-      <div class="login-header">
-        <h2>Login</h2>
-      </div>
+  <input type="email" id="email" placeholder="Email" required>
 
-      <!-- FORM -->
-      <div class="form-panel">
-        <input type="email" id="email" placeholder="Email">
-        <input type="password" id="password" placeholder="Password">
-        <button id="loginBtn">Login</button>
-        <div id="error"></div>
-      </div>
+  <div class="password-wrapper">
+    <input type="password" id="password" placeholder="Password" required>
 
+    <div class="eye-btn" onclick="togglePassword()">
+      <!-- eye open -->
+      <svg id="eyeOpen" viewBox="0 0 24 24" fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <path d="M1 12C3.5 7 7.5 4 12 4s8.5 3 11 8c-2.5 5-6.5 8-11 8S3.5 17 1 12Z"
+              stroke="#333" stroke-width="2"/>
+        <circle cx="12" cy="12" r="3"
+                stroke="#333" stroke-width="2"/>
+      </svg>
+
+      <!-- eye close -->
+      <svg id="eyeClose" viewBox="0 0 24 24" fill="none"
+        xmlns="http://www.w3.org/2000/svg" style="display:none">
+        <path d="M3 3L21 21" stroke="#333" stroke-width="2"/>
+        <path d="M1 12C3.5 7 7.5 4 12 4"
+              stroke="#333" stroke-width="2"/>
+        <path d="M23 12c-2.5 5-6.5 8-11 8"
+              stroke="#333" stroke-width="2"/>
+      </svg>
     </div>
   </div>
 
-</body>
+  <div class="strength">
+    <div class="strength-bar" id="strengthBar"></div>
+  </div>
 
+  <button id="loginBtn">Login</button>
+  <div id="error"></div>
+</div>
+
+<!-- FIREBASE + LOGIN -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -138,45 +171,67 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 document.getElementById("loginBtn").onclick = async () => {
-  const email = document.getElementById("email").value;
+  const email = email.value;
   const password = document.getElementById("password").value;
   const error = document.getElementById("error");
+  error.innerText="";
 
-  error.innerText = "";
+  try{
+    const cred = await signInWithEmailAndPassword(auth,email,password);
+    const uid = cred.user.uid;
 
-  try {
-    const userCred = await signInWithEmailAndPassword(auth, email, password);
-    const uid = userCred.user.uid;
-
-    const snap = await getDoc(doc(db, "users", uid));
-
-    if (!snap.exists()) {
-      error.innerText = "User tidak terdaftar di database";
+    const snap = await getDoc(doc(db,"users",uid));
+    if(!snap.exists()){
+      error.innerText="User tidak terdaftar";
       return;
     }
 
     const { role, aktif } = snap.data();
-
-    if (aktif !== true) {
-      error.innerText = "Akun tidak aktif";
+    if(aktif!==true){
+      error.innerText="Akun tidak aktif";
       return;
     }
 
-    if (role === "admin") {
-      window.location.href = "admin.html";
-    } else if (role === "dokumentasi") {
-      window.location.href = "dokumentasi.html";
-    } else if (role === "protokoler") {
-      window.location.href = "protokoler.html";
-    } else {
-      error.innerText = "Role tidak valid";
-    }
+    if(role==="admin") location.href="admin.html";
+    else if(role==="dokumentasi") location.href="dokumentasi.html";
+    else if(role==="protokoler") location.href="protokoler.html";
+    else error.innerText="Role tidak valid";
 
-  } catch (err) {
-    console.error(err);
-    error.innerText = err.message;
+  }catch(e){
+    error.innerText="Login gagal";
   }
 };
+</script>
+
+<!-- PASSWORD TOGGLE + STRENGTH -->
+<script>
+function togglePassword(){
+  const p=document.getElementById("password");
+  const o=document.getElementById("eyeOpen");
+  const c=document.getElementById("eyeClose");
+
+  if(p.type==="password"){
+    p.type="text";o.style.display="none";c.style.display="block";
+  }else{
+    p.type="password";o.style.display="block";c.style.display="none";
+  }
+}
+
+const pass=document.getElementById("password");
+const bar=document.getElementById("strengthBar");
+
+pass.addEventListener("input",()=>{
+  let s=0,v=pass.value;
+  if(v.length>=6) s++;
+  if(/[A-Z]/.test(v)) s++;
+  if(/[0-9]/.test(v)) s++;
+  if(/[^A-Za-z0-9]/.test(v)) s++;
+
+  bar.className="strength-bar";
+  if(s<=1){bar.style.width="30%";bar.classList.add("weak");}
+  else if(s<=3){bar.style.width="65%";bar.classList.add("medium");}
+  else{bar.style.width="100%";bar.classList.add("strong");}
+});
 </script>
 
 </body>
