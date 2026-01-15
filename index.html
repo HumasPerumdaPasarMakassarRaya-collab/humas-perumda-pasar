@@ -13,13 +13,17 @@
 
 body{
   margin:0;
-  height:100vh;
-  background:
-    linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
-    url("assets/images/bg-index.jpg") center/cover no-repeat;
+  min-height:100vh;
+
+  background-image: url("./assets/images/bg-index.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top center;
+
   display:flex;
   justify-content:center;
-  align-items:center;
+  align-items:flex-start;
+  padding-top:140px;
 }
 
 .login-box{
