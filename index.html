@@ -23,9 +23,15 @@ body{
   display:flex;
   justify-content:center;
   align-items:flex-start;
-  padding-top:110px;
 }
 
+.login-wrapper{
+  margin-top:280px; /* geser ke area biru */
+  width:100%;
+  display:flex;
+  justify-content:center;
+}
+  
 .login-box{
   width:90%;
   max-width:360px;
@@ -91,7 +97,8 @@ button:hover{
 
 <body>
 
-<div class="login-box">
+<div class="login-wrapper">
+  <div class="login-box">
 
   <h2>Login Sistem Humas</h2>
 
@@ -102,6 +109,7 @@ button:hover{
     <div id="error"></div>
   </div>
 
+  </div>
 </div>
 
 <script type="module">
