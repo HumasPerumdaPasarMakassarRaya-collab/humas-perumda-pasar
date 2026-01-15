@@ -141,36 +141,40 @@ document.getElementById("loginBtn").onclick = async () => {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
   const error = document.getElementById("error");
+
   error.innerText = "";
 
-  try{
+  try {
     const userCred = await signInWithEmailAndPassword(auth, email, password);
     const uid = userCred.user.uid;
 
-    const userSnap = await getDoc(doc(db, "users", uid));
+    const snap = await getDoc(doc(db, "users", uid));
 
-    if(!userSnap.exists()){
-      error.innerText = "Data user tidak ditemukan";
+    if (!snap.exists()) {
+      error.innerText = "User tidak terdaftar di database";
       return;
     }
 
-    const role = userSnap.data().role;
+    const { role, aktif } = snap.data();
 
-    if(role === "admin"){
-      location.href = "admin.html";
-    }
-    else if(role === "dokumentasi"){
-      location.href = "dokumentasi.html";
-    }
-    else if(role === "protokoler"){
-      location.href = "protokoler.html";
-    }
-    else{
-      error.innerText = "Role tidak dikenali";
+    if (aktif !== true) {
+      error.innerText = "Akun tidak aktif";
+      return;
     }
 
-  }catch(err){
-    error.innerText = "Login gagal";
+    if (role === "admin") {
+      window.location.href = "admin.html";
+    } else if (role === "dokumentasi") {
+      window.location.href = "dokumentasi.html";
+    } else if (role === "protokoler") {
+      window.location.href = "protokoler.html";
+    } else {
+      error.innerText = "Role tidak valid";
+    }
+
+  } catch (err) {
+    console.error(err);
+    error.innerText = err.message;
   }
 };
 </script>
