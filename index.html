@@ -171,34 +171,41 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 document.getElementById("loginBtn").onclick = async () => {
-  const email = email.value;
+  const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
   const error = document.getElementById("error");
-  error.innerText="";
+  error.innerText = "";
 
-  try{
-    const cred = await signInWithEmailAndPassword(auth,email,password);
+  try {
+    const cred = await signInWithEmailAndPassword(auth, email, password);
     const uid = cred.user.uid;
 
-    const snap = await getDoc(doc(db,"users",uid));
-    if(!snap.exists()){
-      error.innerText="User tidak terdaftar";
+    const snap = await getDoc(doc(db, "users", uid));
+    if (!snap.exists()) {
+      error.innerText = "User tidak terdaftar";
       return;
     }
 
     const { role, aktif } = snap.data();
-    if(aktif!==true){
-      error.innerText="Akun tidak aktif";
+
+    if (aktif !== true) {
+      error.innerText = "Akun tidak aktif";
       return;
     }
 
-    if(role==="admin") location.href="admin.html";
-    else if(role==="dokumentasi") location.href="dokumentasi.html";
-    else if(role==="protokoler") location.href="protokoler.html";
-    else error.innerText="Role tidak valid";
+    if (role === "admin") {
+      window.location.href = "admin.html";
+    } else if (role === "dokumentasi") {
+      window.location.href = "dokumentasi.html";
+    } else if (role === "protokoler") {
+      window.location.href = "protokoler.html";
+    } else {
+      error.innerText = "Role tidak valid";
+    }
 
-  }catch(e){
-    error.innerText="Login gagal";
+  } catch (e) {
+    error.innerText = "Email atau password salah";
+    console.error(e);
   }
 };
 </script>
