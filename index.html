@@ -171,45 +171,34 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 document.getElementById("loginBtn").onclick = async () => {
-  const email = emailInput.value;
-  const password = passwordInput.value;
-  error.innerText = "";
+  const email = email.value;
+  const password = document.getElementById("password").value;
+  const error = document.getElementById("error");
+  error.innerText="";
 
-  try {
-    const userCred = await signInWithEmailAndPassword(auth, email, password);
-    console.log("LOGIN OK:", userCred.user.uid);
+  try{
+    const cred = await signInWithEmailAndPassword(auth,email,password);
+    const uid = cred.user.uid;
 
-    const uid = userCred.user.uid;
-    const snap = await getDoc(doc(db, "users", uid));
-
-    console.log("DOC EXISTS:", snap.exists());
-
-    if (!snap.exists()) {
-      error.innerText = "Data user tidak ditemukan";
+    const snap = await getDoc(doc(db,"users",uid));
+    if(!snap.exists()){
+      error.innerText="User tidak terdaftar";
       return;
     }
 
-    const data = snap.data();
-    console.log("USER DATA:", data);
-
-    if (data.aktif !== true) {
-      error.innerText = "Akun tidak aktif";
+    const { role, aktif } = snap.data();
+    if(aktif!==true){
+      error.innerText="Akun tidak aktif";
       return;
     }
 
-    if (data.role === "admin") {
-      window.location.href = "admin.html";
-    } else if (data.role === "dokumentasi") {
-      window.location.href = "dokumentasi.html";
-    } else if (data.role === "protokoler") {
-      window.location.href = "protokoler.html";
-    } else {
-      error.innerText = "Role tidak valid";
-    }
+    if(role==="admin") location.href="admin.html";
+    else if(role==="dokumentasi") location.href="dokumentasi.html";
+    else if(role==="protokoler") location.href="protokoler.html";
+    else error.innerText="Role tidak valid";
 
-  } catch (err) {
-    console.error("ERROR:", err);
-    error.innerText = err.message;
+  }catch(e){
+    error.innerText="Login gagal";
   }
 };
 </script>
