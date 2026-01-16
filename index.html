@@ -214,5 +214,36 @@ document.getElementById("loginBtn").onclick = async () => {
 };
 </script>
 
+<!-- PASSWORD TOGGLE + STRENGTH -->
+<script>
+function togglePassword(){
+  const p=document.getElementById("password");
+  const o=document.getElementById("eyeOpen");
+  const c=document.getElementById("eyeClose");
+
+  if(p.type==="password"){
+    p.type="text";o.style.display="none";c.style.display="block";
+  }else{
+    p.type="password";o.style.display="block";c.style.display="none";
+  }
+}
+
+const pass=document.getElementById("password");
+const bar=document.getElementById("strengthBar");
+
+pass.addEventListener("input",()=>{
+  let s=0,v=pass.value;
+  if(v.length>=6) s++;
+  if(/[A-Z]/.test(v)) s++;
+  if(/[0-9]/.test(v)) s++;
+  if(/[^A-Za-z0-9]/.test(v)) s++;
+
+  bar.className="strength-bar";
+  if(s<=1){bar.style.width="30%";bar.classList.add("weak");}
+  else if(s<=3){bar.style.width="65%";bar.classList.add("medium");}
+  else{bar.style.width="100%";bar.classList.add("strong");}
+});
+</script>
+
 </body>
 </html>
