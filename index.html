@@ -20,33 +20,39 @@ body{
   align-items:center;
 }
 
-/* GLASS BOX */
-.login-box{
-  width:90%;
+/* ================= DIALOG LOGIN ================= */
+.login-dialog{
+  position:absolute;
+  top:55%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:85%;
   max-width:360px;
-  padding:26px 22px;
-  border-radius:22px;
-  backdrop-filter: blur(14px);
-  background: rgba(255,255,255,.18);
-  box-shadow:0 20px 40px rgba(0,0,0,.35);
+  padding:22px 20px;
+  background:#ffffff;
+  border-radius:18px;
+  box-shadow:
+    0 10px 0 #000,
+    0 18px 35px rgba(0,0,0,.35);
+  text-align:center;
 }
 
-.login-box h2{
-  text-align:center;
-  color:white;
-  margin-bottom:22px;
+.login-dialog h2{
+  margin-bottom:18px;
+  color:#e53935;
+  font-weight:900;
+  letter-spacing:1px;
 }
 
 /* INPUT */
-input{
+.login-dialog input{
   width:100%;
-  padding:14px 16px;
+  padding:14px;
   margin-bottom:14px;
-  border:none;
-  border-radius:14px;
+  border-radius:12px;
+  border:3px solid #000;
   font-size:15px;
   outline:none;
-  background:rgba(255,255,255,.95);
 }
 
 /* PASSWORD */
@@ -54,104 +60,61 @@ input{
   position:relative;
 }
 
-.eye-btn{
+.toggle{
   position:absolute;
+  right:12px;
   top:50%;
-  right:14px;
   transform:translateY(-50%);
-  width:22px;
-  height:22px;
   cursor:pointer;
-  opacity:.7;
+  font-size:18px;
 }
-.eye-btn:hover{opacity:1;}
-
-/* STRENGTH */
-.strength{
-  height:6px;
-  background:#ddd;
-  border-radius:6px;
-  overflow:hidden;
-  margin-bottom:18px;
-}
-.strength-bar{
-  height:100%;
-  width:0;
-  transition:.3s;
-}
-.weak{background:#ff4d4d;}
-.medium{background:#ffc107;}
-.strong{background:#4caf50;}
 
 /* BUTTON */
-button{
+.login-dialog button{
   width:100%;
   padding:14px;
-  border:none;
-  border-radius:16px;
-  background:linear-gradient(135deg,#0d6efd,#00c6ff);
-  color:white;
+  background:#ffca28;
+  border:3px solid #000;
+  border-radius:14px;
   font-size:16px;
-  font-weight:bold;
+  font-weight:900;
   cursor:pointer;
-  transition:.3s;
+  transition:.2s;
 }
-button:hover{
-  transform:translateY(-2px) scale(1.02);
-  box-shadow:0 12px 25px rgba(0,123,255,.5);
+
+.login-dialog button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 6px 0 #000;
 }
 
 /* ERROR */
 #error{
-  color:#ffdddd;
-  text-align:center;
-  margin-top:12px;
+  margin-top:10px;
+  color:#d32f2f;
   font-size:14px;
+  font-weight:bold;
 }
 </style>
 </head>
 
 <body>
 
-<div class="login-box">
-  <h2>Login</h2>
+<!-- DIALOG LOGIN -->
+<div class="login-dialog">
+  <h2>SILAHKAN LOGIN</h2>
 
   <input type="email" id="email" placeholder="Email" required>
 
   <div class="password-wrapper">
     <input type="password" id="password" placeholder="Password" required>
-
-    <div class="eye-btn" onclick="togglePassword()">
-      <!-- eye open -->
-      <svg id="eyeOpen" viewBox="0 0 24 24" fill="none"
-        xmlns="http://www.w3.org/2000/svg">
-        <path d="M1 12C3.5 7 7.5 4 12 4s8.5 3 11 8c-2.5 5-6.5 8-11 8S3.5 17 1 12Z"
-              stroke="#333" stroke-width="2"/>
-        <circle cx="12" cy="12" r="3"
-                stroke="#333" stroke-width="2"/>
-      </svg>
-
-      <!-- eye close -->
-      <svg id="eyeClose" viewBox="0 0 24 24" fill="none"
-        xmlns="http://www.w3.org/2000/svg" style="display:none">
-        <path d="M3 3L21 21" stroke="#333" stroke-width="2"/>
-        <path d="M1 12C3.5 7 7.5 4 12 4"
-              stroke="#333" stroke-width="2"/>
-        <path d="M23 12c-2.5 5-6.5 8-11 8"
-              stroke="#333" stroke-width="2"/>
-      </svg>
-    </div>
+    <span class="toggle" onclick="togglePassword()">👁</span>
   </div>
 
-  <div class="strength">
-    <div class="strength-bar" id="strengthBar"></div>
-  </div>
-
-  <button id="loginBtn">Login</button>
+  <button id="loginBtn">LOGIN</button>
   <div id="error"></div>
 </div>
 
-<!-- FIREBASE + LOGIN -->
+<!-- ================= FIREBASE LOGIN ================= -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -170,75 +133,45 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-document.getElementById("loginBtn").onclick = async () => {
+document.getElementById("loginBtn").addEventListener("click", async () => {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
   const error = document.getElementById("error");
   error.innerText = "";
 
-  try {
+  try{
     const cred = await signInWithEmailAndPassword(auth, email, password);
     const uid = cred.user.uid;
 
     const snap = await getDoc(doc(db, "users", uid));
-    if (!snap.exists()) {
+    if(!snap.exists()){
       error.innerText = "User tidak terdaftar";
       return;
     }
 
-    const { role, aktif } = snap.data();
-
-    if (aktif !== true) {
+    const data = snap.data();
+    if(data.aktif !== true){
       error.innerText = "Akun tidak aktif";
       return;
     }
 
-    if (role === "admin") {
-      window.location.href = "admin.html";
-    } else if (role === "dokumentasi") {
-      window.location.href = "dokumentasi.html";
-    } else if (role === "protokoler") {
-      window.location.href = "protokoler.html";
-    } else {
-      error.innerText = "Role tidak valid";
-    }
+    if(data.role === "admin") location.href = "admin.html";
+    else if(data.role === "dokumentasi") location.href = "dokumentasi.html";
+    else if(data.role === "protokoler") location.href = "protokoler.html";
+    else error.innerText = "Role tidak valid";
 
-  } catch (e) {
-    error.innerText = "Email atau password salah";
-    console.error(e);
+  }catch(e){
+    error.innerText = "Login gagal";
   }
-};
+});
 </script>
 
-<!-- PASSWORD TOGGLE + STRENGTH -->
+<!-- TOGGLE PASSWORD -->
 <script>
 function togglePassword(){
-  const p=document.getElementById("password");
-  const o=document.getElementById("eyeOpen");
-  const c=document.getElementById("eyeClose");
-
-  if(p.type==="password"){
-    p.type="text";o.style.display="none";c.style.display="block";
-  }else{
-    p.type="password";o.style.display="block";c.style.display="none";
-  }
+  const p = document.getElementById("password");
+  p.type = p.type === "password" ? "text" : "password";
 }
-
-const pass=document.getElementById("password");
-const bar=document.getElementById("strengthBar");
-
-pass.addEventListener("input",()=>{
-  let s=0,v=pass.value;
-  if(v.length>=6) s++;
-  if(/[A-Z]/.test(v)) s++;
-  if(/[0-9]/.test(v)) s++;
-  if(/[^A-Za-z0-9]/.test(v)) s++;
-
-  bar.className="strength-bar";
-  if(s<=1){bar.style.width="30%";bar.classList.add("weak");}
-  else if(s<=3){bar.style.width="65%";bar.classList.add("medium");}
-  else{bar.style.width="100%";bar.classList.add("strong");}
-});
 </script>
 
 </body>
