@@ -10,32 +10,36 @@
 /* RESET */
 *{
   box-sizing:border-box;
-  font-family: 'Arial', sans-serif;
+  font-family: Arial, sans-serif;
 }
 
-/* BODY */
+/* HTML & BODY */
+html, body{
+  width:100%;
+  height:100%;
+}
+
+/* BODY + BACKGROUND */
 body{
   margin:0;
   min-height:100vh;
   display:flex;
   justify-content:center;
   align-items:flex-start;
-  background:#000;
-}
 
-/* BACKGROUND GAMBAR */
-.bg{
-  position:fixed;
-  inset:0;
-  background:url("assets/images/bg-index.jpg") center/cover no-repeat;
-  z-index:-1;
+  background-image: url("assets/images/bg-index.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 /* BUBBLE LOGIN */
 .bubble{
   width:90%;
   max-width:360px;
-  margin-top:260px; /* ⬅️ NAIK TURUN DI SINI */
+
+  margin-top:260px; /* 🔧 ATUR NAIK TURUN FORM DI SINI */
   padding:18px 16px 22px;
 }
 
@@ -87,20 +91,14 @@ button:active{
 
 /* KUNCI DESKTOP MODE */
 @media (min-width:768px){
-  body{
-    justify-content:center;
-  }
-
   .bubble{
-    margin-top:260px;
+    margin-top:260px; /* BISA DISAMAKAN / DIUBAH */
   }
 }
 </style>
 </head>
 
 <body>
-
-<div class="bg"></div>
 
 <div class="bubble">
 
@@ -124,7 +122,7 @@ function togglePassword(){
 }
 
 function login(){
-  // logika login nanti
+  // sementara redirect langsung
   window.location.href = "admin.html";
 }
 </script>
