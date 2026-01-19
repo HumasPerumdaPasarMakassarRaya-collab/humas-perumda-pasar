@@ -8,169 +8,151 @@
 <style>
 *{
   box-sizing:border-box;
-  font-family:"Segoe UI",Arial,sans-serif;
+  font-family: "Comic Sans MS", "Segoe UI", sans-serif;
 }
 
 body{
   margin:0;
-  height:100vh;
+  min-height:100vh;
   background:url("./assets/images/bg-index.jpg") center/cover no-repeat;
   display:flex;
   justify-content:center;
   align-items:center;
 }
 
-/* ================= DIALOG LOGIN ================= */
-.login-dialog{
-  position:absolute;
-  top:55%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  width:85%;
-  max-width:360px;
-  padding:22px 20px;
-  background:#ffffff;
+/* ===== DIALOG KOMIK ===== */
+.dialog-box{
+  width:90%;
+  max-width:420px;
+  background:rgba(255,255,255,0.92);
+  border:6px solid #000;
   border-radius:18px;
-  box-shadow:
-    0 10px 0 #000,
-    0 18px 35px rgba(0,0,0,.35);
+  padding:22px 18px 26px;
+  position:relative;
+  box-shadow:8px 8px 0 #000;
+}
+
+/* Ekor dialog */
+.dialog-box::after{
+  content:"";
+  position:absolute;
+  bottom:-28px;
+  left:50px;
+  width:0;
+  height:0;
+  border-top:28px solid #fff;
+  border-left:28px solid transparent;
+  border-right:6px solid transparent;
+  transform:rotate(-10deg);
+}
+
+/* Judul */
+.dialog-title{
   text-align:center;
-}
-
-.login-dialog h2{
-  margin-bottom:18px;
-  color:#e53935;
-  font-weight:900;
+  font-weight:bold;
+  color:#e60000;
   letter-spacing:1px;
+  margin-bottom:14px;
 }
 
-/* INPUT */
-.login-dialog input{
-  width:100%;
-  padding:14px;
+/* Input */
+.input-group{
   margin-bottom:14px;
-  border-radius:12px;
+  position:relative;
+}
+
+input{
+  width:100%;
+  padding:12px 44px 12px 12px;
   border:3px solid #000;
+  border-radius:10px;
   font-size:15px;
   outline:none;
 }
 
-/* PASSWORD */
-.password-wrapper{
-  position:relative;
+input:focus{
+  background:#fff8d6;
 }
 
-.toggle{
+/* Eye icon */
+.eye{
   position:absolute;
-  right:12px;
+  right:10px;
   top:50%;
   transform:translateY(-50%);
   cursor:pointer;
   font-size:18px;
 }
 
-/* BUTTON */
-.login-dialog button{
+/* Button */
+button{
   width:100%;
-  padding:14px;
-  background:#ffca28;
-  border:3px solid #000;
-  border-radius:14px;
-  font-size:16px;
-  font-weight:900;
+  padding:12px;
+  font-size:18px;
+  font-weight:bold;
+  background:#ffcc00;
+  border:4px solid #000;
+  border-radius:12px;
   cursor:pointer;
-  transition:.2s;
+  box-shadow:0 5px 0 #000;
+  transition:.15s;
 }
 
-.login-dialog button:hover{
-  transform:translateY(-2px);
-  box-shadow:0 6px 0 #000;
+button:hover{
+  background:#ffd633;
 }
 
-/* ERROR */
+button:active{
+  transform:translateY(4px);
+  box-shadow:0 1px 0 #000;
+}
+
+/* Error */
 #error{
   margin-top:10px;
-  color:#d32f2f;
-  font-size:14px;
+  text-align:center;
+  color:#c00000;
   font-weight:bold;
+}
+
+/* Responsive PC */
+@media(min-width:768px){
+  .dialog-box{
+    max-width:520px;
+    padding:28px;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<!-- DIALOG LOGIN -->
-<div class="login-dialog">
-  <h2>SILAHKAN LOGIN</h2>
+<div class="dialog-box">
+  <div class="dialog-title">SILAHKAN LOGIN</div>
 
-  <input type="email" id="email" placeholder="Email" required>
-
-  <div class="password-wrapper">
-    <input type="password" id="password" placeholder="Password" required>
-    <span class="toggle" onclick="togglePassword()">👁</span>
+  <div class="input-group">
+    <input type="email" id="email" placeholder="Email">
   </div>
 
-  <button id="loginBtn">LOGIN</button>
+  <div class="input-group">
+    <input type="password" id="password" placeholder="Password">
+    <span class="eye" onclick="togglePassword()">👁</span>
+  </div>
+
+  <button onclick="login()">LOGIN</button>
+
   <div id="error"></div>
 </div>
 
-<!-- ================= FIREBASE LOGIN ================= -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDB2VM_2VbesCkNs9og0saP7lRum93TqCI",
-  authDomain: "humas-perumda-pasar-maka-9d4d0.firebaseapp.com",
-  projectId: "humas-perumda-pasar-maka-9d4d0",
-  storageBucket: "humas-perumda-pasar-maka-9d4d0.firebasestorage.app",
-  messagingSenderId: "1064569749212",
-  appId: "1:1064569749212:web:5acc95cd27795796da7e19"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-document.getElementById("loginBtn").addEventListener("click", async () => {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  const error = document.getElementById("error");
-  error.innerText = "";
-
-  try{
-    const cred = await signInWithEmailAndPassword(auth, email, password);
-    const uid = cred.user.uid;
-
-    const snap = await getDoc(doc(db, "users", uid));
-    if(!snap.exists()){
-      error.innerText = "User tidak terdaftar";
-      return;
-    }
-
-    const data = snap.data();
-    if(data.aktif !== true){
-      error.innerText = "Akun tidak aktif";
-      return;
-    }
-
-    if(data.role === "admin") location.href = "admin.html";
-    else if(data.role === "dokumentasi") location.href = "dokumentasi.html";
-    else if(data.role === "protokoler") location.href = "protokoler.html";
-    else error.innerText = "Role tidak valid";
-
-  }catch(e){
-    error.innerText = "Login gagal";
-  }
-});
-</script>
-
-<!-- TOGGLE PASSWORD -->
 <script>
 function togglePassword(){
-  const p = document.getElementById("password");
+  const p=document.getElementById("password");
   p.type = p.type === "password" ? "text" : "password";
+}
+
+function login(){
+  document.getElementById("error").innerText =
+    "⚠️ Login Firebase akan kita sambungkan di step berikutnya";
 }
 </script>
 
