@@ -7,53 +7,47 @@
 <title>Login HUMAS</title>
 
 <style>
-/* RESET */
 *{
   box-sizing:border-box;
   font-family: Arial, sans-serif;
 }
 
-html, body{
-  width:100%;
-  height:100%;
+body{
   margin:0;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  background:#000;
 }
 
-/* === KANVAS BACKGROUND === */
-.page{
-  position:relative;
-  width:100%;
-  height:100vh;
-
-  background-image:url("assets/images/bg-index.jpg");
-  background-size:cover;
-  background-position:center;
-  background-repeat:no-repeat;
+/* ======================
+   BACKGROUND DEFAULT (MOBILE)
+====================== */
+.bg{
+  position:fixed;
+  inset:0;
+  background:
+    url("assets/images/bg-index.jpg")
+    center top / cover
+    no-repeat;
+  z-index:-1;
 }
 
-/* === AREA BUBBLE (ANCHOR) === */
-.bubble-area{
-  position:absolute;
-
-  /* 🔧 INI KUNCI POSISI DALAM GAMBAR */
-  top:42%;
-  left:50%;
-  transform:translate(-50%, -50%);
-
+/* ======================
+   LOGIN BUBBLE DEFAULT
+====================== */
+.bubble{
   width:90%;
   max-width:360px;
-}
-
-/* === FORM LOGIN === */
-.login-form{
-  display:flex;
-  flex-direction:column;
-  gap:14px;
+  margin-top:260px;
+  padding:16px;
 }
 
 /* INPUT */
 .input-box{
   position:relative;
+  margin-bottom:14px;
 }
 
 .input-box input{
@@ -65,7 +59,7 @@ html, body{
   outline:none;
 }
 
-/* ICON EYE */
+/* EYE ICON */
 .eye{
   position:absolute;
   right:14px;
@@ -77,6 +71,7 @@ html, body{
 
 /* BUTTON */
 button{
+  width:100%;
   padding:14px;
   border-radius:18px;
   border:4px solid #000;
@@ -84,17 +79,51 @@ button{
   font-size:18px;
   font-weight:bold;
   cursor:pointer;
-  transition:.2s;
+  transition:0.2s;
 }
 
 button:hover{ transform:scale(1.03); }
 button:active{ transform:scale(0.97); }
 
-/* === KUNCI DESKTOP MODE (CHROME MOBILE) === */
-@media (min-width:768px){
-  .page{
-    max-width:420px;
-    margin:auto;
+/* ======================
+   DESKTOP MODE / LAYAR BESAR
+   (termasuk Chrome mobile + Desktop Mode ON)
+====================== */
+@media (min-width: 768px) {
+
+  body{
+    align-items:center;
+  }
+
+  .bg{
+    background:
+      url("assets/images/bg-index.jpg")
+      center center / contain
+      no-repeat;
+  }
+
+  .bubble{
+    margin-top:0;
+    max-width:320px;
+  }
+
+  .input-box input{
+    font-size:15px;
+    padding:12px 42px 12px 14px;
+  }
+
+  button{
+    font-size:16px;
+    padding:12px;
+  }
+}
+
+/* ======================
+   DESKTOP ASLI (mouse)
+====================== */
+@media (hover:hover) and (pointer:fine){
+  .bubble{
+    transform:scale(0.95);
   }
 }
 </style>
@@ -102,32 +131,27 @@ button:active{ transform:scale(0.97); }
 
 <body>
 
-<div class="page">
+<div class="bg"></div>
 
-  <!-- FORM TEPAT DI DALAM BUBBLE GAMBAR -->
-  <div class="bubble-area">
-    <form class="login-form">
+<div class="bubble">
 
-      <div class="input-box">
-        <input type="email" placeholder="Email" required>
-      </div>
-
-      <div class="input-box">
-        <input type="password" id="password" placeholder="Password" required>
-        <span class="eye" onclick="togglePassword()">👁</span>
-      </div>
-
-      <button type="button" onclick="login()">LOGIN</button>
-
-    </form>
+  <div class="input-box">
+    <input type="email" placeholder="Email">
   </div>
+
+  <div class="input-box">
+    <input type="password" id="password" placeholder="Password">
+    <span class="eye" onclick="togglePassword()">👁</span>
+  </div>
+
+  <button onclick="login()">LOGIN</button>
 
 </div>
 
 <script>
 function togglePassword(){
-  const pass = document.getElementById("password");
-  pass.type = pass.type === "password" ? "text" : "password";
+  const p = document.getElementById("password");
+  p.type = p.type === "password" ? "text" : "password";
 }
 
 function login(){
