@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Login HUMAS</title>
 
@@ -13,40 +13,47 @@
   font-family: Arial, sans-serif;
 }
 
-/* HTML & BODY */
 html, body{
   width:100%;
   height:100%;
-}
-
-/* BODY + BACKGROUND */
-body{
   margin:0;
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
-
-  background-image: url("assets/images/bg-index.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
 }
 
-/* BUBBLE LOGIN */
-.bubble{
+/* === KANVAS BACKGROUND === */
+.page{
+  position:relative;
+  width:100%;
+  height:100vh;
+
+  background-image:url("assets/images/bg-index.jpg");
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+}
+
+/* === AREA BUBBLE (ANCHOR) === */
+.bubble-area{
+  position:absolute;
+
+  /* 🔧 INI KUNCI POSISI DALAM GAMBAR */
+  top:42%;
+  left:50%;
+  transform:translate(-50%, -50%);
+
   width:90%;
   max-width:360px;
+}
 
-  margin-top:400px; /* 🔧 ATUR NAIK TURUN FORM DI SINI */
-  padding:18px 16px 22px;
+/* === FORM LOGIN === */
+.login-form{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
 }
 
 /* INPUT */
 .input-box{
   position:relative;
-  margin-bottom:14px;
 }
 
 .input-box input{
@@ -68,9 +75,8 @@ body{
   font-size:18px;
 }
 
-/* BUTTON LOGIN */
+/* BUTTON */
 button{
-  width:100%;
   padding:14px;
   border-radius:18px;
   border:4px solid #000;
@@ -78,21 +84,17 @@ button{
   font-size:18px;
   font-weight:bold;
   cursor:pointer;
-  transition:0.2s;
+  transition:.2s;
 }
 
-button:hover{
-  transform:scale(1.03);
-}
+button:hover{ transform:scale(1.03); }
+button:active{ transform:scale(0.97); }
 
-button:active{
-  transform:scale(0.97);
-}
-
-/* KUNCI DESKTOP MODE */
+/* === KUNCI DESKTOP MODE (CHROME MOBILE) === */
 @media (min-width:768px){
-  .bubble{
-    margin-top:260px; /* BISA DISAMAKAN / DIUBAH */
+  .page{
+    max-width:420px;
+    margin:auto;
   }
 }
 </style>
@@ -100,18 +102,25 @@ button:active{
 
 <body>
 
-<div class="bubble">
+<div class="page">
 
-  <div class="input-box">
-    <input type="email" placeholder="Email" required>
+  <!-- FORM TEPAT DI DALAM BUBBLE GAMBAR -->
+  <div class="bubble-area">
+    <form class="login-form">
+
+      <div class="input-box">
+        <input type="email" placeholder="Email" required>
+      </div>
+
+      <div class="input-box">
+        <input type="password" id="password" placeholder="Password" required>
+        <span class="eye" onclick="togglePassword()">👁</span>
+      </div>
+
+      <button type="button" onclick="login()">LOGIN</button>
+
+    </form>
   </div>
-
-  <div class="input-box">
-    <input type="password" id="password" placeholder="Password" required>
-    <span class="eye" onclick="togglePassword()">👁</span>
-  </div>
-
-  <button onclick="login()">LOGIN</button>
 
 </div>
 
@@ -122,7 +131,6 @@ function togglePassword(){
 }
 
 function login(){
-  // sementara redirect langsung
   window.location.href = "admin.html";
 }
 </script>
