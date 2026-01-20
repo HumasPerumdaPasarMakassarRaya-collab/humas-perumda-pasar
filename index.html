@@ -45,6 +45,53 @@ body{
 }
 
 /* INPUT */
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Login HUMAS</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  font-family: Arial, sans-serif;
+}
+
+body{
+  margin:0;
+  height:100vh;
+  background:#000;
+  overflow:hidden;
+}
+
+/* ================= BACKGROUND ================= */
+.bg{
+  position:fixed;
+  inset:0;
+  background:url("assets/images/bg-index.jpg") center top / cover no-repeat;
+  z-index:0;
+}
+
+/* ================= OVERLAY ================= */
+.overlay{
+  position:relative;
+  width:100%;
+  height:100%;
+}
+
+/* ================= BUBBLE AREA (MOBILE) ================= */
+.bubble-area{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  top:58%;                /* ⬅️ posisi bubble di gambar (mobile) */
+  width:72%;              /* ⬅️ lebar bubble di gambar */
+  max-width:340px;
+}
+
+/* ================= FORM ================= */
 .input-box{
   position:relative;
   margin-bottom:14px;
@@ -59,7 +106,7 @@ body{
   outline:none;
 }
 
-/* EYE ICON */
+/* Eye */
 .eye{
   position:absolute;
   right:14px;
@@ -69,7 +116,7 @@ body{
   font-size:18px;
 }
 
-/* BUTTON */
+/* Button */
 button{
   width:100%;
   padding:14px;
@@ -79,51 +126,22 @@ button{
   font-size:18px;
   font-weight:bold;
   cursor:pointer;
-  transition:0.2s;
+  transition:.2s;
 }
 
-button:hover{ transform:scale(1.03); }
-button:active{ transform:scale(0.97); }
+button:hover{transform:scale(1.03);}
+button:active{transform:scale(0.97);}
 
-/* ======================
-   DESKTOP MODE / LAYAR BESAR
-   (termasuk Chrome mobile + Desktop Mode ON)
-====================== */
-@media (min-width: 768px) {
-
-  body{
-    align-items:center;
-  }
+/* ================= DESKTOP MODE ================= */
+@media (min-width: 768px){
 
   .bg{
-    background:
-      url("assets/images/bg-index.jpg")
-      center center / contain
-      no-repeat;
+    background:url("assets/images/bg-index.jpg") center center / contain no-repeat;
   }
 
-  .bubble{
-    margin-top:0;
-    max-width:320px;
-  }
-
-  .input-box input{
-    font-size:15px;
-    padding:12px 42px 12px 14px;
-  }
-
-  button{
-    font-size:16px;
-    padding:12px;
-  }
-}
-
-/* ======================
-   DESKTOP ASLI (mouse)
-====================== */
-@media (hover:hover) and (pointer:fine){
-  .bubble{
-    transform:scale(0.95);
+  .bubble-area{
+    top:54%;              /* ⬅️ bubble pas di desktop */
+    width:300px;          /* ⬅️ mengikuti bubble di gambar desktop */
   }
 }
 </style>
@@ -133,18 +151,23 @@ button:active{ transform:scale(0.97); }
 
 <div class="bg"></div>
 
-<div class="bubble">
+<div class="overlay">
 
-  <div class="input-box">
-    <input type="email" placeholder="Email">
+  <!-- FORM DI DALAM BUBBLE GAMBAR -->
+  <div class="bubble-area">
+
+    <div class="input-box">
+      <input type="email" placeholder="Email">
+    </div>
+
+    <div class="input-box">
+      <input type="password" id="password" placeholder="Password">
+      <span class="eye" onclick="togglePassword()">👀</span>
+    </div>
+
+    <button onclick="login()">LOGIN</button>
+
   </div>
-
-  <div class="input-box">
-    <input type="password" id="password" placeholder="Password">
-    <span class="eye" onclick="togglePassword()">👁</span>
-  </div>
-
-  <button onclick="login()">LOGIN</button>
 
 </div>
 
