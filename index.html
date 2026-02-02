@@ -3,183 +3,188 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Login HUMAS</title>
 
 <style>
 *{
-  box-sizing:border-box;
-  font-family: Arial, sans-serif;
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+html, body{
+    width:100%;
+    height:100%;
 }
 
 body{
-  margin:0;
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
-  background:#000;
+    overflow:hidden;
 }
 
-/* ======================
-   BACKGROUND DEFAULT (MOBILE)
-====================== */
-.bg{
-  position:fixed;
-  inset:0;
-  background:
-    url("assets/images/bg-index.jpg")
-    center top / cover
-    no-repeat;
-  z-index:-1;
+.wrapper{
+    position:relative;
+    width:100%;
+    height:100vh;
 }
 
-/* ======================
-   LOGIN BUBBLE DEFAULT
-====================== */
-.bubble{
-  width:90%;
-  max-width:360px;
-  margin-top:100px;
-  padding:16px;
+.wrapper img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
 }
 
-/* INPUT */
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Login HUMAS</title>
-
-<style>
-*{
-  box-sizing:border-box;
-  font-family: Arial, sans-serif;
+.form{
+    position:absolute;
+    top:45%;
+    left:52%;
+    transform:translate(-50%, -50%);
+    width:60%;
+    max-width:360px;
 }
 
-body{
-  margin:0;
-  height:100vh;
-  background:#000;
-  overflow:hidden;
+input{
+    width:100%;
+    padding:8px;
+    margin-bottom:3px;
+    border:3px solid #000;
+    border-radius:14px;
+    font-size:16px;
 }
 
-/* ================= BACKGROUND ================= */
-.bg{
-  position:fixed;
-  inset:0;
-  background:url("assets/images/bg-index.jpg") center top / cover no-repeat;
-  z-index:0;
-}
-
-/* ================= OVERLAY ================= */
-.overlay{
-  position:relative;
-  width:100%;
-  height:100%;
-}
-
-/* ================= BUBBLE AREA (MOBILE) ================= */
-.bubble-area{
-  position:absolute;
-  left:50%;
-  transform:translateX(-50%);
-  top:58%;                /* ⬅️ posisi bubble di gambar (mobile) */
-  width:72%;              /* ⬅️ lebar bubble di gambar */
-  max-width:340px;
-}
-
-/* ================= FORM ================= */
-.input-box{
-  position:relative;
-  margin-bottom:14px;
-}
-
-.input-box input{
-  width:100%;
-  padding:14px 44px 14px 16px;
-  border-radius:16px;
-  border:3px solid #000;
-  font-size:16px;
-  outline:none;
-}
-
-/* Eye */
-.eye{
-  position:absolute;
-  right:14px;
-  top:50%;
-  transform:translateY(-50%);
-  cursor:pointer;
-  font-size:18px;
-}
-
-/* Button */
 button{
-  width:100%;
-  padding:14px;
-  border-radius:18px;
-  border:4px solid #000;
-  background:#FFD21E;
-  font-size:18px;
-  font-weight:bold;
-  cursor:pointer;
-  transition:.2s;
+    width:100%;
+    padding:8px;
+    background:#FFD600;
+    border:3px solid #000;
+    border-radius:18px;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
 }
 
-button:hover{transform:scale(1.03);}
-button:active{transform:scale(0.97);}
-
-/* ================= DESKTOP MODE ================= */
-@media (min-width: 768px){
-
-  .bg{
-    background:url("assets/images/bg-index.jpg") center center / contain no-repeat;
-  }
-
-  .bubble-area{
-    top:54%;              /* ⬅️ bubble pas di desktop */
-    width:300px;          /* ⬅️ mengikuti bubble di gambar desktop */
-  }
+button:active{
+    transform:scale(0.95);
 }
+
+#msg{
+    text-align:center;
+    margin-top:5px;
+    margin-left:-20px;
+    font-weight:bold;
+}
+
+@keyframes shake{
+    0%{transform:translate(-50%, -50%) translateX(0);}
+    25%{transform:translate(-50%, -50%) translateX(-8px);}
+    50%{transform:translate(-50%, -50%) translateX(8px);}
+    75%{transform:translate(-50%, -50%) translateX(-8px);}
+    100%{transform:translate(-50%, -50%) translateX(0);}
+}
+
+@keyframes pop{
+    0%{transform:translate(-50%, -50%) scale(1);}
+    50%{transform:translate(-50%, -50%) scale(1.08);}
+    100%{transform:translate(-50%, -50%) scale(1);}
+}
+
+.shake{animation:shake 0.4s;}
+.pop{animation:pop 0.3s;}
 </style>
 </head>
 
 <body>
 
-<div class="bg"></div>
+<div class="wrapper">
+    <img src="img/bg_login.jpg" alt="Login HUMAS">
 
-<div class="overlay">
-
-  <!-- FORM DI DALAM BUBBLE GAMBAR -->
-  <div class="bubble-area">
-
-    <div class="input-box">
-      <input type="email" placeholder="Email">
+    <div class="form">
+        <input type="email" id="username" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">LOGIN</button>
+        <div id="msg"></div>
     </div>
-
-    <div class="input-box">
-      <input type="password" id="password" placeholder="Password">
-      <span class="eye" onclick="togglePassword()">👀</span>
-    </div>
-
-    <button onclick="login()">LOGIN</button>
-
-  </div>
-
 </div>
 
-<script>
-function togglePassword(){
-  const p = document.getElementById("password");
-  p.type = p.type === "password" ? "text" : "password";
-}
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-function login(){
-  window.location.href = "admin.html";
-}
+/* =====================
+   FIREBASE CONFIG
+===================== */
+const firebaseConfig = {
+  apiKey: "AIzaSyAzM_PfoVc-YSDy1Ffqlkdl8Pj161KJAk4",
+  authDomain: "testproject1-16f3a.firebaseapp.com",
+  projectId: "testproject1-16f3a",
+  storageBucket: "testproject1-16f3a.firebasestorage.app",
+  messagingSenderId: "677267745961",
+  appId: "1:677267745961:web:f0844a1e4e6764bf32cdb8"
+};
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+/* =====================
+   OPSI 1 — EMAIL WHITELIST
+===================== */
+const allowedEmails = [
+  "dokumentasi@humas.id",
+  "agenda@humas.id",
+  "admin@humas.id"
+];
+
+/* =====================
+   LOGIN
+===================== */
+window.login = function(){
+  const email = document.getElementById("username").value.trim();
+  const pass  = document.getElementById("password").value.trim();
+  const msg   = document.getElementById("msg");
+  const form  = document.querySelector(".form");
+
+  if(!email || !pass){
+    msg.innerHTML = "❗ Lengkapi Data";
+    msg.style.color = "red";
+    shake(form);
+    return;
+  }
+
+  signInWithEmailAndPassword(auth, email, pass)
+  .then((cred)=>{
+    const user = cred.user;
+
+    /* CEK EMAIL (OPSI 1) */
+    if(!allowedEmails.includes(user.email)){
+      msg.innerHTML = "❌ Akun Tidak Terdaftar";
+      msg.style.color = "red";
+      signOut(auth);
+      shake(form);
+      return;
+    }
+
+    /* LOGIN BERHASIL */
+    localStorage.setItem("login","true");
+    localStorage.setItem("user", user.email);
+
+    msg.innerHTML = "✅ Login Berhasil";
+    msg.style.color = "green";
+    pop(form);
+
+    // setTimeout(()=>window.location.href="home.html",800);
+  })
+  .catch(()=>{
+    msg.innerHTML = "❌ Login Gagal";
+    msg.style.color = "red";
+    shake(form);
+  });
+};
 </script>
 
 </body>
